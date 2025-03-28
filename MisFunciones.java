@@ -118,4 +118,47 @@ class Funciones {
         // COMPLETAR
             return true;
     }
+
+     boolean esPrefijo(String s1, String s2) {
+        // COMPLETAR
+        int numero = 0;
+        int largo1 = s1.length();
+        int largo2 = s2.length();
+        boolean res = true;
+        if (largo1 > largo2){
+        res = false;
+        return res;
+        }
+        while (numero < largo1){
+        if (s1.charAt(numero) == (s2.charAt(numero))){
+        numero += 1;
+        }
+        else {
+        res = false;
+        numero += 1;
+        }
+        }
+        return res;
+    }
+
+    String inversa (String s1) {
+        String res = new String();
+        int largo1 = s1.length();
+        for (int i = largo1 - 1 ;i >= 0; i--) {
+            res += s1.charAt(i);
+        }
+        return res;
+    }
+
+    boolean esSufijo(String s1, String s2) {
+        // COMPLETAR
+        boolean res = true;
+        if (esPrefijo(inversa(s1), inversa(s2))) {
+            return res;
+        
+        }    else {
+            res = false;
+        }
+            return res;
+    }    
 }
