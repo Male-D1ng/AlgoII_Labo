@@ -109,16 +109,6 @@ class Funciones {
         return false;
     }
 
-    boolean esPrefijo(String s1, String s2) {
-        // COMPLETAR
-        return false;
-    }
-
-    boolean esSufijo(String s1, String s2) {
-        // COMPLETAR
-            return true;
-    }
-
      boolean esPrefijo(String s1, String s2) {
         // COMPLETAR
         int numero = 0;
