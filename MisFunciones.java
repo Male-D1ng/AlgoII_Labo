@@ -116,19 +116,6 @@ class Funciones {
 
     boolean esSufijo(String s1, String s2) {
         // COMPLETAR
-        boolean esSufijo(String s1, String s2) {
-        // COMPLETAR
-        int posicion = s2.length() - 1;
-        if (s1.length() <= s2.length()) {
-            //while (posicion >= 0) {
-                for (int i = ((s1.length()) - 1); i >= 0; i--) {
-                    if (s1.charAt(i) != s2.charAt(posicion)) {
-                       return false;
-                    } 
-                     posicion -= 1;
-                }
             return true;
-        }
-        return false;
     }
 }
