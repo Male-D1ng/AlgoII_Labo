@@ -52,7 +52,18 @@ public class Fecha {
     }
 
     public void incrementarDia() {
-        // Implementar
+        if (diasEnMes(Mes)< Dia + 1){ // si el mes tiene 31 dias, y el dia es 31, dia + 1 va a ser 32, osea el pirmero del mes siguiente.
+            Dia = 1;
+            if (Mes < 12){
+                Mes += 1;
+            }
+            else{
+                Mes = 1;
+            }
+        }
+        else{
+            Dia += 1;
+        }
     }
 
     private int diasEnMes(int mes) {
