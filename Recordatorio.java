@@ -40,7 +40,7 @@ public class Recordatorio {
         }
         else {
             Recordatorio otroRecordatorio = (Recordatorio) otro;
-            return ((Mensaj.equals(otroRecordatorio.Mensaje)) && (Fecha.equals(otroRecordatorio.Fecha)) && (Horario.equals(otroRecordatorio.Horario)));
+            return ((Mensaje.equals(otroRecordatorio.Mensaje)) && (Fecha.equals(otroRecordatorio.Fecha)) && (Horario.equals(otroRecordatorio.Horario)));
     }
 
 }
