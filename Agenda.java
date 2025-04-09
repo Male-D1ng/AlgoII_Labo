@@ -9,6 +9,7 @@ public class Agenda {
         fecha = new Fecha(fechaActual);
         recordatorios = new ArregloRedimensionableDeRecordatorios();
         // Implementar
+        //otro comentario
 
     }
 
