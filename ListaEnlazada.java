@@ -171,12 +171,10 @@ public class ListaEnlazada<T> implements Secuencia<T> {
 
     private class ListaIterador implements Iterador<T> {
     	// Completar atributos privados
-        // Completar atributos privados
         Nodo anterior;
         Nodo actual;
 
         public ListaIterador() {
-            //throw new UnsupportedOperationException("No implementada aun")
             anterior = null;
             actual = primerElem;
         
@@ -191,14 +189,14 @@ public class ListaEnlazada<T> implements Secuencia<T> {
         }
 
         public T siguiente() {
-	        Nodo nuevo = actual;
+	    Nodo nuevo = actual;
             anterior = actual;
             actual = actual.siguiente;
             return nuevo.valor;
         }
         
         public T anterior() {
-	        Nodo actual = anterior;
+	    Nodo actual = anterior;
             actual = anterior;
             anterior = anterior.anterior;
             return actual.valor;
