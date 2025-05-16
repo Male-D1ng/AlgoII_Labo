@@ -139,67 +139,6 @@ public class ListaEnlazada<T> implements Secuencia<T> {
         sb.append("]");
         return sb.toString();
     }
-/*
-    private class ListaIterador implements Iterador<T> {
-    	// Completar atributos privados
-        Nodo anterior;
-        Nodo actual;
-
-        public ListaIterador() {
-            anterior = null;
-            actual = primerElem;
-        
-        }
-
-        public boolean haySiguiente() {
-	        return actual != null;
-        }
-        
-        public boolean hayAnterior() {
-	        return anterior != null;
-        }
-
-        public T siguiente() {
-
-        if (!haySiguiente()) {
-            return null;  // o lanzar excepción si estuviera permitido
-        }
-
-        T valor = actual.valor;
-        anterior = actual;
-        actual = actual.siguiente;
-        return valor;
-        }
-
-        public T anterior() {
-
-        if (!hayAnterior()) {
-            return null;  // o lanzar excepción si estuviera permitido
-        }
-
-        actual = anterior;
-        T valor = actual.valor;
-        anterior = anterior.anterior;
-        return valor;
-    }
-        }
-
-        /*
-       public T siguiente() {
-	    Nodo nuevo = actual;
-            anterior = actual;
-            actual = actual.siguiente;
-            return nuevo.valor;
-        }
-        
-        public T anterior() {
-	    Nodo actual = anterior;
-            actual = anterior;
-            anterior = anterior.anterior;
-            return actual.valor;
-        }
-    
- */
   
     private class ListaIterador implements Iterador<T> {
         Nodo siguienteNodo;   // Nodo que será retornado con siguiente()
