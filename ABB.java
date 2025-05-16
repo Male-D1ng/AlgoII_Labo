@@ -7,30 +7,63 @@ import java.util.*;
 public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     // Agregar atributos privados del Conjunto
 
+        private Nodo raiz;
+        private int cardinal;
+        private int altura;
+
     private class Nodo {
         // Agregar atributos privados del Nodo
+        T valor ;
+        Nodo izq;
+        Nodo der;
+        Nodo padre;
+
+        Nodo (T v) {
+            valor = v;
+            izq = null;
+            der = null;
+            padre = null;
+        }
 
         // Crear Constructor del nodo
     }
 
     public ABB() {
-        throw new UnsupportedOperationException("No implementada aun");
+        raiz = null;
+        cardinal = 0;
+        altura = 0;
+
     }
 
-    public int cardinal() {
-        throw new UnsupportedOperationException("No implementada aun");
+    public int cardinal() { //la cantidad de elem en el conjunto
+        return cardinal;
     }
 
     public T minimo(){
-        throw new UnsupportedOperationException("No implementada aun");
+        return minimo();
     }
 
     public T maximo(){
-        throw new UnsupportedOperationException("No implementada aun");
+        return maximo();
     }
 
     public void insertar(T elem){
-        throw new UnsupportedOperationException("No implementada aun");
+        Nodo nuevo = new Nodo(elem) ;
+        if (raiz.valor == null){
+            raiz = nuevo;
+        }
+        
+        if (nuevo==raiz & raiz.valor != null ) { //caso raiz ya es 8
+            return; 
+        }
+        else {
+            Nodo actual = new Nodo(elem);
+            if (nuevo.valor.compareTo(raiz.valor)== -1){
+                        actual = raiz.izq;
+                        }
+                }
+                
+        cardinal++;
     }
 
     public boolean pertenece(T elem){
