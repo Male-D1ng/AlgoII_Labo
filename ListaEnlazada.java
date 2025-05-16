@@ -21,6 +21,7 @@ public class ListaEnlazada<T> implements Secuencia<T> {
         primerElem = null;
         ultimoElem = null;
         longitud = 0 ;
+        
     }
 
     public int longitud() {
@@ -29,146 +30,116 @@ public class ListaEnlazada<T> implements Secuencia<T> {
     }
 
     public void agregarAdelante(T elem) {
-        
+
         Nodo nuevo = new Nodo(elem);
         if (longitud == 0) {
             primerElem = nuevo;
             ultimoElem = nuevo;
-        }
+        } 
         else {
             nuevo.siguiente = primerElem;
             primerElem.anterior = nuevo;
             primerElem = nuevo;
-
         }
-        longitud ++;
+        longitud++;
     }
 
     public void agregarAtras(T elem) {
-        
+
         Nodo nuevo = new Nodo(elem);
-        if (primerElem == null) {
+        if (longitud == 0) {
             primerElem = nuevo;
             ultimoElem = nuevo;
-        } 
-        else {
-            Nodo actual = primerElem;
-            while (actual.siguiente != null) {
-                actual = actual.siguiente;
-        }
-            actual.siguiente = nuevo;
-            actual.anterior = ultimoElem; 
+        } else {
+            ultimoElem.siguiente = nuevo;  // El nodo último apunta al nuevo
+            nuevo.anterior = ultimoElem;   // El nuevo apunta hacia atrás al último
+            ultimoElem = nuevo;            // Actualizo último nodo
         }
         longitud++;
     }
 
     public T obtener(int i) {
+
+        if (i < 0 || i >= longitud) return null;
+
         Nodo actual = primerElem;
-        for (int j = 0; j < longitud; j++) {
-            if (j == i) {
-                return actual.valor;
-        }   
-            else {
-                actual = actual.siguiente;
-            }
+        for (int j = 0; j < i; j++) {
+            actual = actual.siguiente;
         }
         return actual.valor;
     }
 
     public void eliminar(int i) {
+
         Nodo actual = primerElem;
-        Nodo anterior = primerElem;
+
         for (int j = 0; j < i; j++) {
-            anterior = actual;
             actual = actual.siguiente;
         }
-            if (i == 0) {
-                primerElem = actual.siguiente;
-                longitud--;
-        } 
-            else {
-                anterior.siguiente = actual.siguiente;
-                longitud--;
-    }
-    }
+
+        if (actual.anterior != null) {
+            actual.anterior.siguiente = actual.siguiente;
+        } else {
+            // Si es el primer nodo, actualizo primerElem
+            primerElem = actual.siguiente;
+        }
+
+        if (actual.siguiente != null) {
+            actual.siguiente.anterior = actual.anterior;
+        } else {
+            // Si es el último nodo, actualizo ultimoElem
+            ultimoElem = actual.anterior;
+        }
+
+        longitud--;
+        }
 
     public void modificarPosicion(int indice, T elem) {
-        Nodo actual = primerElem;
-        Nodo sigNodo = actual.siguiente;
-        Nodo nuevo = new Nodo(elem); 
-        if (indice==0){ 
-            sigNodo = primerElem;
-            primerElem = nuevo;
-            nuevo.siguiente = sigNodo; 
-            sigNodo.anterior = nuevo;
-        }
-        for (int j = 0; j < longitud; j++) {
-            Nodo antNodo = actual.anterior;
-            if(j == indice && j == longitud-1){
-                antNodo.siguiente = nuevo; 
-            }
-            else if(j == indice){
-                sigNodo = actual.siguiente; 
-                actual = nuevo;
-                nuevo.anterior = antNodo;
-                nuevo.siguiente = sigNodo;
-                antNodo.siguiente = nuevo;
-                sigNodo.anterior = nuevo; 
-            }
-            else{
-                actual = actual.siguiente;
-   
-            }
-        }
+        if (indice < 0 || indice >= longitud) {
+        // Si no se permiten excepciones, simplemente no hacer nada
+        return;
     }
 
-    /*  {
-        Nodo actual = this.primero;
-        Nodo sig = actual.sig;
-        Nodo nuevoNodo = new Nodo(elem);
-        if(indice == 0){
-                sig = this.primero;
-                this.primero = nuevoNodo;
-                nuevoNodo.sig = sig;
-                sig.prev = nuevoNodo;
+        Nodo actual = primerElem;
+        for (int i = 0; i < indice; i++) {
+            actual = actual.siguiente;
         }
-        for(int j = 0; j<this.longitud; j++){
-            Nodo prev = actual.prev;
-            if(j == indice && j == this.longitud-1){
-                prev.sig = nuevoNodo; 
-            }else if(j == indice){
-                sig = actual.sig; 
-                actual = nuevoNodo;
-                nuevoNodo.prev = prev;
-                nuevoNodo.sig = sig;
-                prev.sig = nuevoNodo;
-                sig.prev = nuevoNodo; 
-            }else{
-                actual = actual.sig;
-            }
-        }
-    } */
+
+        actual.valor = elem;
+
+    }
+
 
     public ListaEnlazada(ListaEnlazada<T> lista) {
-        primerElem = lista.primerElem;
-        longitud = lista.longitud;
+        primerElem = null;
+        ultimoElem = null;
+        longitud = 0;
+
+        Nodo actual = lista.primerElem;
+        while (actual != null) {
+            this.agregarAtras(actual.valor);
+            actual = actual.siguiente;
+        }
     }
     
     @Override
     public String toString() {
-        StringBuffer string = new StringBuffer(); 
-        string.append("[");
-        for(int j = 0; j< longitud; j++){
-            string.append(primerElem.valor);
-            primerElem = primerElem.siguiente; 
-            if(j != longitud-1){
-                string.append(", ");
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+
+        Nodo actual = primerElem;
+        while (actual != null) {
+            sb.append(actual.valor);
+            actual = actual.siguiente;
+            if (actual != null) {
+                sb.append(", ");
             }
         }
-        string.append("]");
-        return string.toString();
+        sb.append("]");
+        return sb.toString();
     }
-
+/*
     private class ListaIterador implements Iterador<T> {
     	// Completar atributos privados
         Nodo anterior;
@@ -189,6 +160,32 @@ public class ListaEnlazada<T> implements Secuencia<T> {
         }
 
         public T siguiente() {
+
+        if (!haySiguiente()) {
+            return null;  // o lanzar excepción si estuviera permitido
+        }
+
+        T valor = actual.valor;
+        anterior = actual;
+        actual = actual.siguiente;
+        return valor;
+        }
+
+        public T anterior() {
+
+        if (!hayAnterior()) {
+            return null;  // o lanzar excepción si estuviera permitido
+        }
+
+        actual = anterior;
+        T valor = actual.valor;
+        anterior = anterior.anterior;
+        return valor;
+    }
+        }
+
+        /*
+       public T siguiente() {
 	    Nodo nuevo = actual;
             anterior = actual;
             actual = actual.siguiente;
@@ -201,16 +198,46 @@ public class ListaEnlazada<T> implements Secuencia<T> {
             anterior = anterior.anterior;
             return actual.valor;
         }
+    
+ */
+  
+    private class ListaIterador implements Iterador<T> {
+        Nodo siguienteNodo;   // Nodo que será retornado con siguiente()
+        Nodo anteriorNodo;    // Nodo que será retornado con anterior()
+
+        public ListaIterador() {
+            siguienteNodo = primerElem;  // Al inicio, siguiente es el primer nodo
+            anteriorNodo = null;         // No hay nodo anterior al inicio
+        }
+
+        public boolean haySiguiente() {
+            return siguienteNodo != null;
+        }
+
+        public boolean hayAnterior() {
+            return anteriorNodo != null;
+        }
+
+        public T siguiente() {
+            if (!haySiguiente()) return null;
+
+            T valor = siguienteNodo.valor;
+            anteriorNodo = siguienteNodo;       // Ahora el anterior será el que acabamos de devolver
+            siguienteNodo = siguienteNodo.siguiente; // Avanzamos el siguiente
+            return valor;
+        }
+
+        public T anterior() {
+            if (!hayAnterior()) return null;
+
+            T valor = anteriorNodo.valor;
+            siguienteNodo = anteriorNodo;          // Ahora el siguiente es el nodo que acabamos de devolver
+            anteriorNodo = anteriorNodo.anterior;  // Retrocedemos el anterior
+            return valor;
     }
-
-/* public T anterior() {
-            Nodo actual = this.prev;
-            this.act = this.prev;
-            this.prev = this.prev.prev;
-            return actual.valor; */
-
-    public Iterador<T> iterador() {
-	    return new ListaIterador();
     }
-
+        public Iterador<T> iterador() {
+            return new ListaIterador();
+    }
+    
 }
