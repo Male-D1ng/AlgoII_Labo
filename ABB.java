@@ -40,38 +40,80 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     }
 
     public T minimo(){
-        return minimo();
+        T minimo = raiz.valor;
+        while(raiz.izq != null){
+            minimo = raiz.izq.valor;
+            raiz = raiz.izq;
+        }
+        return minimo;
     }
 
     public T maximo(){
-        return maximo();
-    }
-
-    public void insertar(T elem){
-        Nodo nuevo = new Nodo(elem) ;
-        if (raiz.valor == null){
-            raiz = nuevo;
+        T maximo = raiz.valor;
+        while(raiz.der != null){
+            maximo = raiz.der.valor;
+            raiz = raiz.der;
         }
-        
-        if (nuevo==raiz) { //caso raiz ya es 8
-            return; 
+        return maximo;
+    }
+    
+    public void insertar(T elem){
+        //Nodo nuevo = new Nodo (elem);
+        if (pertenece(elem)){
+            cardinal--;
+        }
+        if (raiz != null && elem == raiz.valor) { //caso raiz ya es 8
         }
         else {
-            Nodo actual = new Nodo(elem);
-            if (nuevo.valor.compareTo(raiz.valor)== -1){
-                        actual = raiz.izq;
-                        }
-                }
-                
-        cardinal++;
+            raiz = insertar_recursivo(raiz, elem);
+            cardinal++;
+        }
     }
 
+    Nodo insertar_recursivo (Nodo raiz,  T elem) {
+        if (raiz == null){
+            raiz = new Nodo (elem);
+            return raiz;
+        }
+        if (raiz.valor.compareTo(elem)== -1){
+                        raiz.der = insertar_recursivo(raiz.der, elem);
+                        }
+        else {
+                raiz.izq = insertar_recursivo(raiz.izq, elem);
+            }
+
+        return raiz;
+            
+    }
+
+
     public boolean pertenece(T elem){
-        throw new UnsupportedOperationException("No implementada aun");
+        Nodo actual = busqueda_recursiva(raiz, elem);
+        if (actual != null){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    Nodo busqueda_recursiva (Nodo raiz, T elem){
+        if (raiz == null || raiz.valor == elem){
+            return raiz;
+        } //raiz < elem 
+        if (raiz.valor.compareTo(elem)== -1){
+            return busqueda_recursiva(raiz.der, elem);
+        }
+        else{
+            return busqueda_recursiva(raiz.izq, elem);
+        }
+
     }
 
     public void eliminar(T elem){
-        throw new UnsupportedOperationException("No implementada aun");
+        Nodo actual = raiz;
+
+        busqueda_recursiva(actual, elem);
     }
 
     public String toString(){
@@ -84,12 +126,12 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
 
         public ABB_Iterador() {
         _anterior = null;
-        _actual =  ;
+        _actual = null ;
 
         }
 
         public boolean haySiguiente() {            
-            return ;
+            return haySiguiente();
         }
     
         public T siguiente() {
@@ -100,5 +142,6 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     public Iterador<T> iterador() {
         return new ABB_Iterador();
     }
+
 
 }
