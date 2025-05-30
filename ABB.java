@@ -53,7 +53,7 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
             raiz = nuevo;
         }
         
-        if (nuevo==raiz & raiz.valor != null ) { //caso raiz ya es 8
+        if (nuevo==raiz) { //caso raiz ya es 8
             return; 
         }
         else {
@@ -80,9 +80,16 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
 
     private class ABB_Iterador implements Iterador<T> {
         private Nodo _actual;
+        private Nodo _anterior;
+
+        public ABB_Iterador() {
+        _anterior = null;
+        _actual =  ;
+
+        }
 
         public boolean haySiguiente() {            
-            throw new UnsupportedOperationException("No implementada aun");
+            return ;
         }
     
         public T siguiente() {
