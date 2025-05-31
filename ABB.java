@@ -116,9 +116,54 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         busqueda_recursiva(actual, elem);
     }
 
-    public String toString(){
-        throw new UnsupportedOperationException("No implementada aun");
+
+    //Borrado recursivo
+     Nodo borrar_Recursivo(Nodo raiz, int clave) {
+     //Si el Arbol está vacio
+         if (raiz == null) {
+             return raiz;}
+    
+     //Recorrer el árbol
+         if (clave < raiz.clave) //Recorrer el sub árbol izquierdo
+             {raiz.izq = borrar_Recursivo(raiz.izq, clave);}
+    
+         else if (clave > raiz.clave) //Recorrer el sub árbol derecho
+             {raiz.der = borrar_Recursivo(raiz.der, clave);}
+         else {
+    
+     // El nodo contiene solo un hijo
+             if (raiz.izq == null)
+                 {return raiz.der;}
+             else if (raiz.der == null)
+                 {return raiz.izq;}
+    
+     // El Nodo Tiene 2 hijos;
+     //Obtener el sucesor inorder (Valor mínimo del subarbol derecho)
+         raiz.valor = ValorMinimo(raiz.der);
+    
+     // Borrar el sucesor inorder
+         raiz.der = borrar_Recursivo(raiz.der, raiz.valor);
+     }
+     return raiz;
+     }
+    
+     private String stringInOrder(Nodo actual){
+        if (actual == null){
+            return "";
+        }
+
+        String izquierda = stringInOrder(actual.izq);
+        String derecha = stringInOrder(actual.der);
+
+        return izquierda + (izquierda.isEmpty() ? "" : ",") + actual.valor.toString() + (derecha.isEmpty() ? "" : ",") + derecha;
     }
+
+    public String toString(){ 
+        Nodo aux = raiz;
+        String res = "{";
+        res = res + stringInOrder(aux);
+        res = res + "}";
+        return res;
 
     private class ABB_Iterador implements Iterador<T> {
         private Nodo _actual;
@@ -135,8 +180,29 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         }
     
         public T siguiente() {
-            throw new UnsupportedOperationException("No implementada aun");
+            Nodo actualViejo = _actual;
+            _anterior = actualViejo;
+            Nodo siguiente = hallarNodoSiguiente(_actual);
+            _actual = siguiente;
+            return actualViejo.valor;
         }
+
+        public Nodo hallarNodoSiguiente(Nodo arbol) {
+            if (arbol == null) return null;
+            if (arbol.der != null) return hallarNodoConMinimo(arbol.der);
+            return hallarSiguienteNodoPadre(arbol);
+    }
+
+        private Nodo hallarSiguienteNodoPadre(Nodo arbol) {
+            Nodo nodoPadre = arbol.padre;
+            if (arbol == null || nodoPadre == null || arbol == nodoPadre.izq) return nodoPadre;
+            return hallarSiguienteNodoPadre(nodoPadre);
+    }
+
+        public Nodo hallarNodoConMinimo(Nodo arbol){
+            if(arbol.izq == null) return arbol; 
+            else return hallarNodoConMinimo(arbol.izq);
+    }
     }
 
     public Iterador<T> iterador() {
