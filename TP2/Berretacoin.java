@@ -6,8 +6,9 @@ public class Berretacoin {
     private Usuario[] usuarios; // arreglo indexado por id
     private Heap<Usuario> heapUsuarios; // max heap con handlers para actualizar usuarios
     private ListaEnlazada<Bloque> cadena;
-    private int maxIdTx;
+    //private int maxIdTx;
     private Bloque ultimoBloque;
+    private ComparadorUsuarios comparador;
 
     public Berretacoin(int n_usuarios) {
         this.usuarios = new Usuario[n_usuarios + 1];
@@ -16,48 +17,48 @@ public class Berretacoin {
             usuarios[i] = new Usuario(i);
             listaUsuarios.add(usuarios[i]);
         }
-
         // Inicializo el heap con los usuarios y comparador correspondiente
-        heapUsuarios = new Heap<>(new ComparadorUsuarios(), listaUsuarios); // O(P)
+        comparador = new ComparadorUsuarios();
+        heapUsuarios = new Heap<>(comparador, listaUsuarios); // O(P)
         this.cadena = new ListaEnlazada<>();
-        this.maxIdTx = n_usuarios;
+        //this.maxIdTx = n_usuarios;
     }
 
     public void agregarBloque(Transaccion[] transacciones) {
-        // Encontrar el id máximo de transacción
-        int maxIdTx = 0;
-        for (Transaccion tx : transacciones) {
-            maxIdTx = Math.max(maxIdTx, tx.obtenerId());
+    Bloque bloque = new Bloque();
+
+    for (int i = 0; i < transacciones.length; i++) {
+        Transaccion tx = transacciones[i];
+        int idComprador = tx.id_comprador();
+        int idVendedor = tx.id_vendedor();
+        int monto = tx.monto();
+
+        if (idComprador != 0) {
+            usuarios[idComprador].modificarSaldo(-monto);
+            usuarios[idComprador].incrementarTransacciones();
+            heapUsuarios.actualizar(usuarios[idComprador]);
         }
 
-        Bloque bloque = new Bloque();
-
-        for (Transaccion tx : transacciones) {
-            int idComprador = tx.id_comprador();
-            int idVendedor = tx.id_vendedor();
-            int monto = tx.monto();
-
-            if (idComprador != 0) {
-                usuarios[idComprador].modificarSaldo(-monto);
-                usuarios[idComprador].incrementarTransacciones();
-                heapUsuarios.actualizar(usuarios[idComprador]);
-            }
-
-            if (idVendedor != 0) {
-                usuarios[idVendedor].modificarSaldo(monto);
-                usuarios[idVendedor].incrementarTransacciones();
-                heapUsuarios.actualizar(usuarios[idVendedor]);
-            }
-
-            bloque.agregarTransaccion(tx);
+        // El vendedor recibe el dinero (gana saldo)
+        if (idVendedor != 0) {
+            usuarios[idVendedor].modificarSaldo(monto);
+            usuarios[idVendedor].decrementarTransacciones();
+            heapUsuarios.actualizar(usuarios[idVendedor]);
+        
         }
 
-        this.ultimoBloque = bloque;
-        cadena.agregar(bloque);
+        bloque.agregarTransaccion(tx);
     }
 
+    this.ultimoBloque = bloque;
+    cadena.agregar(bloque);
+}
+
     public Transaccion txMayorValorUltimoBloque() {
-        return ultimoBloque != null ? ultimoBloque.obtenerMax() : null;
+        if (ultimoBloque == null){
+            return null;
+        }
+        return ultimoBloque.obtenerMax();
     }
 
     public Transaccion[] txUltimoBloque() {
@@ -73,7 +74,12 @@ public class Berretacoin {
     public int montoMedioUltimoBloque() {
         if (ultimoBloque == null) return 0;
         int cant = ultimoBloque.cantidadTransaccionesValidas();
-        return cant == 0 ? 0 : ultimoBloque.sumaMontos() / cant;
+        if (cant == 0){
+            return 0;
+        }
+        else {
+            return ultimoBloque.sumaMontos() / cant;
+        }
     }
 
     public void hackearTx() {
@@ -93,7 +99,7 @@ public class Berretacoin {
         }
 
         if (idVendedor != 0) {
-            usuarios[idVendedor].modificarSaldo(-monto);
+            usuarios[idVendedor].modificarSaldo(--monto);
             usuarios[idVendedor].decrementarTransacciones();
             heapUsuarios.actualizar(usuarios[idVendedor]);
         }

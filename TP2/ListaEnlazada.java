@@ -25,22 +25,28 @@ public class ListaEnlazada<T> {
     }
 
     public T ultimo() {
-        return cola != null ? cola.valor : null;
+        if (cola != null){
+            return cola.valor; 
+        }
+        else {
+            return null;
+        }
     }
 
-    public Iterable<T> iterable() {
-        return () -> new java.util.Iterator<T>() {
-            Nodo<T> actual = cabeza;
+    public Iterador<T> iterador() {
+    return new Iterador<T>() {
+        private Nodo<T> actual = cabeza;
 
-            public boolean hasNext() {
-                return actual != null;
-            }
+        public boolean haySiguiente() {
+            return actual != null;
+        }
 
-            public T next() {
-                T val = actual.valor;
-                actual = actual.siguiente;
-                return val;
-            }
-        };
-    }
+        public T siguiente() {
+            T valor = actual.valor;
+            actual = actual.siguiente;
+            return valor;
+        }
+    };
+}
+
 }

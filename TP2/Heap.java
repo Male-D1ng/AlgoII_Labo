@@ -18,23 +18,11 @@ public class Heap <T> {
         }
     }
 
-    private void heapify() {
-        for (int i = (size / 2) - 1; i >= 0; i--) {
-            bajar(i);
-        }
-    }
-
-    public void cambiarPrioridadCiudad(Usuario usuario, int valor){   //O(log(size)) porque buscar es O(1)
-        usuario.modificarMaxId(valor);
-
-        int posCambiar = usuario.obtenerHandler();
-        int posPadre = posPadre(posCambiar);
-
-        if (posPadre != posCambiar && posMayorPrioridad(posCambiar, posPadre) == posCambiar){
-            subir(posCambiar);
-        }
-        else{
-            bajar(posCambiar);  
+    private void heapify(){ //O(size)
+        int posPadre = elementos.size() - 1;
+        while (posPadre >= 0){  
+            bajar(posPadre);    
+            posPadre--;
         }
     }
 
@@ -100,46 +88,57 @@ public class Heap <T> {
         return (posHijo - 1) / 2;
     }
 
-    private int posMayorPrioridad(int pos1, int pos2){  //O(1)
-    if (comparador.compare(elementos.get(pos1), elementos.get(pos2)) > 0){
-        return pos1;
+    private int posMayorPrioridad(int pos1, int pos2) {
+    if (pos1 >= size || pos2 >= size) {
+        // Si alguno de los dos está fuera de rango, devolvemos el válido
+        if (pos1 < size) return pos1;
+        if (pos2 < size) return pos2;
+        return 0; // Fallback seguro
     }
-    else{
+    if (comparador.compare(elementos.get(pos1), elementos.get(pos2)) > 0) {
+        return pos1;
+    } else {
         return pos2;
     }
     }
 
+
     public void actualizar(T elemento) {
-        int pos = -1;
-        if (elemento.getClass() == Transaccion.class) {
-            pos = ((Transaccion) elemento).obtenerHandler();
-        } else if (elemento.getClass() == Usuario.class) {
-            pos = ((Usuario) elemento).obtenerHandler();
-        } else if (elemento.getClass() == Bloque.class) {
-            pos = ((Bloque) elemento).obtenerHandler();
-        }
+    int pos = -1;
+    if (elemento.getClass() == Transaccion.class) {
+        pos = ((Transaccion) elemento).obtenerHandler();
+    } else if (elemento.getClass() == Usuario.class) {
+        pos = ((Usuario) elemento).obtenerHandler();
+    } else if (elemento.getClass() == Bloque.class) {
+        pos = ((Bloque) elemento).obtenerHandler();
+    }
 
-        if (pos == -1) {
-            encolar(elemento);
+    if (pos == -1) {
+        encolar(elemento);
+    } else {
+        int posPadre = posPadre(pos);
+        if (pos != 0 && posMayorPrioridad(pos, posPadre) == pos) {
+            subir(pos);
         } else {
-            if (!subir(pos)) {
-                bajar(pos);
-            }
+            bajar(pos);
         }
     }
+}
 
-    private boolean subir(int i) {
-        boolean subio = false;
-        while (i > 0) {
-            int padre = (i - 1) / 2;
-            if (comparador.compare(elementos.get(i), elementos.get(padre)) > 0) {
-                swap(i, padre);
-                i = padre;
-                subio = true;
-            } else break;
+    private void subir(int posicion) {
+    while (posicion > 0) {
+        int posPadre = posPadre(posicion);
+        if (posMayorPrioridad(posicion, posPadre) == posicion) {
+            swap(posicion, posPadre);
+            posicion = posPadre;
+        } else {
+            break;
         }
-        return subio;
     }
+}
+
+
+
 
     private void bajar(int i) {
         int n = size;
