@@ -6,7 +6,6 @@ public class Bloque {
     private ArrayList<Transaccion> transacciones;
     private Heap<Transaccion> heapPorValor;
     private int sumaMontos;
-    private int handler;
     private ComparadorTransaccion comparadorTransaccion;
 
     public Bloque() {
@@ -14,7 +13,6 @@ public class Bloque {
         this.transacciones = new ArrayList<Transaccion>();
         this.heapPorValor = new Heap<Transaccion>(comparadorTransaccion,transacciones);
         this.sumaMontos = 0;
-        this.handler = -1;
     }
 
 
@@ -31,7 +29,7 @@ public class Bloque {
     }
 
     public Transaccion obtenerMax() {
-        return heapPorValor.maximo();
+        return heapPorValor.verRaiz();
     }
 
     public Transaccion extraerMax() {
@@ -68,14 +66,6 @@ public class Bloque {
             }
         }
         return count;
-    }
-
-    public int obtenerHandler() {
-        return handler;
-    }
-
-    public void modificarHandler(int nuevo) {
-        handler = nuevo;
     }
 
     public int sumaMontos() {

@@ -42,7 +42,7 @@ public class Berretacoin {
         // El vendedor recibe el dinero (gana saldo)
         if (idVendedor != 0) {
             usuarios[idVendedor].modificarSaldo(monto);
-            usuarios[idVendedor].decrementarTransacciones();
+            usuarios[idVendedor].incrementarTransacciones();
             heapUsuarios.actualizar(usuarios[idVendedor]);
         
         }
@@ -68,7 +68,7 @@ public class Berretacoin {
     }
 
     public int maximoTenedor() {
-        return heapUsuarios.maximo().obtenerId();
+        return heapUsuarios.verRaiz().obtenerId();
     }
 
     public int montoMedioUltimoBloque() {

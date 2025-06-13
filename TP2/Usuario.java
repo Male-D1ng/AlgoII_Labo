@@ -54,10 +54,6 @@ public class Usuario implements Comparable<Usuario> {
         }
     }
 
-    public void modificarHandler(int h) {
-        this.handler = h;
-    }
-
     public void resetearHandler() {
         this.handler = -1;
 
@@ -69,5 +65,6 @@ public class Usuario implements Comparable<Usuario> {
             return Integer.compare(this.saldo, otro.saldo);
         return Integer.compare(otro.id, this.id); // para desempatar con el id menor
     }
+
 }
 

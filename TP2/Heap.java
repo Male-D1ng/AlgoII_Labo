@@ -31,21 +31,21 @@ public class Heap <T> {
         size++;
         int pos = size-1;
         
-        //Inicializo handler traslado
+        //Inicializo handler transaccion
         if (elementos.get(0).getClass() == Transaccion.class){
             Transaccion transaccion = (Transaccion) elemento;
 
             transaccion.modificarHandlerTransaccion(pos);
     
         }
-        //Inicializo handler ciudad
+        //Inicializo handler usuario
         else if(elementos.get(0).getClass() == Usuario.class){
             Usuario usuarios = (Usuario) elemento;
 
             usuarios.modificarHandlerUsuario(pos);
         }
 
-        subir(size-1); //elemento está en la ultima posicion, es decir size-1
+        subir(pos); //elemento está en la ultima posicion, es decir size-1
     }
 
     public void eliminarTransaccion(Transaccion transaccion){    //O(log(size)) porque buscar es O(1)
@@ -81,6 +81,7 @@ public class Heap <T> {
     }
 
     public T verRaiz(){ 
+        if (size == 0) return null;
         return elementos.get(0);
     }
 
@@ -109,8 +110,6 @@ public class Heap <T> {
         pos = ((Transaccion) elemento).obtenerHandler();
     } else if (elemento.getClass() == Usuario.class) {
         pos = ((Usuario) elemento).obtenerHandler();
-    } else if (elemento.getClass() == Bloque.class) {
-        pos = ((Bloque) elemento).obtenerHandler();
     }
 
     if (pos == -1) {
@@ -126,16 +125,13 @@ public class Heap <T> {
 }
 
     private void subir(int posicion) {
-    while (posicion > 0) {
         int posPadre = posPadre(posicion);
-        if (posMayorPrioridad(posicion, posPadre) == posicion) {
+        if (posicion != 0 && posMayorPrioridad(posicion, posPadre) == posicion) {
             swap(posicion, posPadre);
             posicion = posPadre;
-        } else {
-            break;
         }
-    }
-}
+  }
+
 
 
 
@@ -169,16 +165,12 @@ public class Heap <T> {
             ((Transaccion) e1).modificarHandlerTransaccion(j);
         } else if (e1.getClass() == Usuario.class) {
             ((Usuario) e1).modificarHandlerUsuario(j);
-        } else if (e1.getClass() == Bloque.class) {
-            ((Bloque) e1).modificarHandler(j);
         }
 
         if (e2.getClass() == Transaccion.class) {
             ((Transaccion) e2).modificarHandlerTransaccion(i);
         } else if (e2.getClass() == Usuario.class) {
             ((Usuario) e2).modificarHandlerUsuario(i);
-        } else if (e2.getClass() == Bloque.class) {
-            ((Bloque) e2).modificarHandler(i);
         }
     }
 
@@ -190,10 +182,7 @@ public class Heap <T> {
         return size;
     }
 
-    public T maximo() {
-        if (size == 0) return null;
-        return elementos.get(0);
-    }
+
 }
 
 
